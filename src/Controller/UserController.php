@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,8 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
+   
      /**
-     * @Route("/user/new", name="add_user", methods={"POST"})
+     * @Route("/api/user/new", name="add_user", methods={"POST"})
      */
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
@@ -33,5 +35,45 @@ class UserController extends AbstractController
             'message' => 'User bien ajoute'
         ];
         return new JsonResponse($data, 201);
+    }
+
+     /**
+     * @Route("/api/users/{page<\d+>?1}", name="list_users", methods={"GET"})
+     */
+    public function index(Request $request,UserRepository $repo, SerializerInterface $serializer)
+    {
+       $page = $request->query->get('page');
+       if(is_null($page) || $page < 1) {
+        $page = 1;
+    }
+       $limit = 10;
+       $users = $repo->findAllUsers($page, $limit);
+       $data = $serializer->serialize($users, 'json');
+       return new Response($data, 200, [
+           'Content-Type' => 'application/json'
+       ]);
+
+    }
+
+         /**
+     * @Route("/api/user/{id}", name="show_user", methods={"GET"})
+     */
+    public function show(User $user, UserRepository $repo, SerializerInterface $serializer)
+    {
+        $user = $repo->find($user->getId());
+        $data = $serializer->serialize($user, 'json');
+        return new Response($data, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
+    /**
+     * @Route("api/user/{id}", name="delete_user", methods={"DELETE"})
+     */
+    public function delete(User $user, EntityManagerInterface $entityManager)
+    {
+        $entityManager->remove($user);
+        $entityManager->flush();
+        return new Response(null, 204);
     }
 }
