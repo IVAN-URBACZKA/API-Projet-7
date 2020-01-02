@@ -11,12 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 class PhoneController extends AbstractController
 {
     /**
      * @Route("/api/phones/{page<\d+>?1}", name="list_phone", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(Request $request,PhoneRepository $repo, SerializerInterface $serializer)
     {
@@ -37,6 +39,7 @@ class PhoneController extends AbstractController
 
      /**
      * @Route("/api/phone/{id}", name="show_phone", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(Phone $phone, PhoneRepository $repo, SerializerInterface $serializer)
     {
