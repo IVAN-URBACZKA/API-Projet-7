@@ -62,13 +62,17 @@ class UserController extends AbstractController
     }
 
      /**
-     * @Route("/api/user/{id}", name="show_user", methods={"GET"})
+     * @Route("/api/user/{name}", name="show_user", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      * 
      */
+
     public function show(User $user, UserRepository $repo, SerializerInterface $serializer)
     {
-        $user = $repo->find($user->getId());
+        $user = $repo->findBy(
+            ['name' => $user->getName()],
+            ['firstname' => 'ASC']
+        );
         $data = $serializer->serialize($user, 'json');
         return new Response($data, 200, [
             'Content-Type' => 'application/json'
