@@ -12,12 +12,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
+
 
 class UserController extends AbstractController
 {
    
      /**
      * @Route("/api/user/new", name="add_user", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
@@ -29,6 +33,7 @@ class UserController extends AbstractController
                 'Content-Type' => 'application/json'
             ]);
         }
+        $entityManager->persist($user);
         $entityManager->flush();
         $data = [
             'status' => 201,
@@ -39,6 +44,7 @@ class UserController extends AbstractController
 
      /**
      * @Route("/api/users/{page<\d+>?1}", name="list_users", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(Request $request,UserRepository $repo, SerializerInterface $serializer)
     {
@@ -55,8 +61,10 @@ class UserController extends AbstractController
 
     }
 
-         /**
+     /**
      * @Route("/api/user/{id}", name="show_user", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * 
      */
     public function show(User $user, UserRepository $repo, SerializerInterface $serializer)
     {
@@ -69,6 +77,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("api/user/{id}", name="delete_user", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(User $user, EntityManagerInterface $entityManager)
     {
