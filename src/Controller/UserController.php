@@ -13,6 +13,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
+
 
 
 
@@ -21,11 +25,28 @@ class UserController extends AbstractController
    
      /**
      * @Route("/api/user/new", name="add_user", methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
+     * 
+     * @SWG\Response(
+     *     response=201,
+     *     description="create user",
+     *     @Model(type=User::class, groups={"list"})
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="The JSON sent contains invalid data",
+     * )
+     * 
      */
-    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
+    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserInterface $customer = null)
     {
+      
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        if($user->getCustomerId() == null)
+        {
+            $user->setCustomerId($customer);
+        }
         $errors = $validator->validate($user);
         if(count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
@@ -44,26 +65,44 @@ class UserController extends AbstractController
 
      /**
      * @Route("/api/users/{page<\d+>?1}", name="list_users", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
+     * @SWG\Response(
+     *     response=200,
+     *     description="The list of all Users",
+     *     @Model(type=User::class, groups={"list"})
+     * )
      */
     public function index(Request $request,UserRepository $repo, SerializerInterface $serializer)
     {
-       $page = $request->query->get('page');
-       if(is_null($page) || $page < 1) {
-        $page = 1;
-    }
-       $limit = 10;
-       $users = $repo->findAllUsers($page, $limit);
-       $data = $serializer->serialize($users, 'json');
-       return new Response($data, 200, [
-           'Content-Type' => 'application/json'
-       ]);
+        $page = $request->query->get('page');
+        if(is_null($page) || $page < 1) {
+         $page = 1;
+     }
+        $limit = 10;
+        $users = $repo->findAllUsers($page, $limit);
+        $data = $serializer->serialize($users, 'json',[
+            'groups' => ['list']
+        ]);
+        return new Response($data, 200, [
+            'Content-Type' => 'application/json'
+        ]);
 
     }
 
      /**
      * @Route("/api/user/{name}", name="show_user", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
+     * 
+     * @SWG\Response(
+     *     response=200,
+     *     description="Detail of a particular user",
+     *     @Model(type=User::class, groups={"list"})
+     * )
+     * 
+     * @SWG\Response(
+     *     response=404,
+     *     description="This user does not exists."
+     * )
      * 
      */
 
@@ -71,9 +110,12 @@ class UserController extends AbstractController
     {
         $user = $repo->findBy(
             ['name' => $user->getName()],
-            ['firstname' => 'ASC']
+            ['firstname' => 'ASC'],
+          
         );
-        $data = $serializer->serialize($user, 'json');
+        $data = $serializer->serialize($user, 'json',[
+            'groups' => ['list']
+        ]);
         return new Response($data, 200, [
             'Content-Type' => 'application/json'
         ]);
@@ -81,7 +123,17 @@ class UserController extends AbstractController
 
     /**
      * @Route("api/user/{id}", name="delete_user", methods={"DELETE"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
+     * 
+     * @SWG\Response(
+     *     response=204,
+     *     description="Nothing",
+     * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="This user does not exists."
+     * )
      */
     public function delete(User $user, EntityManagerInterface $entityManager)
     {
