@@ -18,8 +18,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class SecurityController extends AbstractController
 {
   /**
-     * @Route("api/register", name="register", methods={"POST"})
+     * @Route("/register", name="register", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
+     * 
+     * 
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager,SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -53,15 +55,4 @@ class SecurityController extends AbstractController
         return new JsonResponse($data, 500);
     }
 
-    /**
-     * @Route("api/login", name="login", methods={"POST"})
-     */
-    public function login(Request $request)
-    {
-        $user = $this->getUser();
-        return $this->json([
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles()
-        ]);
-    }
 }

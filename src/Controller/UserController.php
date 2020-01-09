@@ -127,7 +127,7 @@ class UserController extends AbstractController
      * 
      * @SWG\Response(
      *     response=204,
-     *     description="Nothing",
+     *     description="Delete user",
      * )
      *
      * @SWG\Response(
