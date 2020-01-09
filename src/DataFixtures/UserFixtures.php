@@ -2,29 +2,35 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\User;
+use App\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+
 
 class UserFixtures extends Fixture
 {
 
-    private $name = ['Dupont', 'Dubois','Delapierre'];
-    private $firstname = ['Jean', 'Pierre','marie'];
-
+ 
 
     public function load(ObjectManager $manager)
     {
+
+
         for($i = 1; $i <= 20; $i++) {
 
             $user = new User();
-            $user->setName($this->name[rand(0,2)]);
-            $user->setFirstname($this->firstname[rand(0,2)]);
-            $user->setEmail('rondoudou@gmail.com');
 
+           
+
+            $user->setName("jean")
+                 ->setFirstname("robert")
+                 ->setEmail("jean@gmail.com")
+                 ->setCity("paris")
+                 ->setAdress("3 rue de la la la lere");
             $manager->persist($user);
-
-        $manager->flush();
+            $manager->flush();
     }
 }
 
