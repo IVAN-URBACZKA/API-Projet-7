@@ -16,22 +16,43 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $users = [];
 
+        $name = ['jean','bryan','vladimir'];
 
-        for($i = 1; $i <= 20; $i++) {
+        $firstname = ['martin','urbaczka','irholci'];
+
+        for($i = 1; $i <= 10; $i++) {
 
             $user = new User();
 
-           
-
-            $user->setName("jean")
-                 ->setFirstname("robert")
+            $user->setName($name[mt_rand(0,2)])
+                 ->setFirstname($firstname[mt_rand(0,2)])
                  ->setEmail("jean@gmail.com")
                  ->setCity("paris")
                  ->setAdress("3 rue de la la la lere");
             $manager->persist($user);
-            $manager->flush();
+            array_push($users,$user);
+            
     }
+
+    $manager->flush();
+
+    foreach($users as $user) {
+
+        
+
+        $user->setLinks(array(array(
+            'self' => '/api/user/'.$user->getId().'',
+            'delete' => '/api/user/'.$user->getId().''
+        )));
+        
+        
+    }
+    
+
+    $manager->flush();
+
 }
 
 }

@@ -47,6 +47,14 @@ class Phone
      */
     private $description;
 
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * @Groups({"list"})
+     */
+    private $links = [];
+
+  
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +104,18 @@ class Phone
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLinks(): ?array
+    {
+        return $this->links;
+    }
+
+    public function setLinks(array $links): self
+    {
+        $this->links = $links;
 
         return $this;
     }

@@ -24,7 +24,7 @@ class UserController extends AbstractController
 {
    
      /**
-     * @Route("/api/user/new", name="add_user", methods={"POST"})
+     * @Route("/api/user", name="add_user", methods={"POST"})
      * @IsGranted("ROLE_USER")
      * 
      * @SWG\Response(
@@ -56,6 +56,12 @@ class UserController extends AbstractController
         }
         $entityManager->persist($user);
         $entityManager->flush();
+        $user->setLinks(array(array(
+            'self' => '/api/user/'.$user->getId().'',
+            'delete' => '/api/user/'.$user->getId().''
+        )));
+        $entityManager->flush();
+
         $data = [
             'status' => 201,
             'message' => 'User bien ajoute'
@@ -90,7 +96,7 @@ class UserController extends AbstractController
     }
 
      /**
-     * @Route("/api/user/{name}", name="show_user", methods={"GET"})
+     * @Route("/api/user/{id}", name="show_user", methods={"GET"})
      * @IsGranted("ROLE_USER")
      * 
      * @SWG\Response(
@@ -109,7 +115,7 @@ class UserController extends AbstractController
     public function show(User $user, UserRepository $repo, SerializerInterface $serializer)
     {
         $user = $repo->findBy(
-            ['name' => $user->getName()],
+            ['id' => $user->getId()],
             ['firstname' => 'ASC'],
           
         );
