@@ -14,6 +14,8 @@ class PhoneFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         
+        $phones = [];
+
         for($i = 1; $i <= 20; $i++) {
             $phone = new Phone();
             $phone->setName($this->names[rand(0,1)]. ' ' . rand(5, 8));
@@ -22,9 +24,25 @@ class PhoneFixtures extends Fixture
             $phone->setDescription('A wonderful phone with ' . rand(10, 50) . ' tricks');
 
             $manager->persist($phone);
-
+            array_push($phones,$phone);
         }
 
         $manager->flush();
+
+
+        foreach($phones as $phone) {
+
+        
+
+            $phone->setLinks(array(array(
+                'self' => '/api/phone/'.$phone->getId().''
+            )));
+            
+            
+        }
+
+
+        $manager->flush();
+
     }
 }

@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
 
 
 /**
@@ -19,7 +21,7 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"list"})
+     * @Groups({"list", "show"})
      */
     private $id;
 
@@ -64,6 +66,14 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $adress;
+
+    /**
+     * @SWG\Property(type="string", maxLength=255)
+     * @ORM\Column(type="array")
+     * @Groups({"list"})
+     * 
+     */
+    private $links = [];
 
     public function getId(): ?int
     {
@@ -138,6 +148,18 @@ class User
     public function setAdress(string $adress): self
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getLinks(): ?array
+    {
+        return $this->links;
+    }
+
+    public function setLinks(array $links): self
+    {
+        $this->links = $links;
 
         return $this;
     }
