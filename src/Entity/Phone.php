@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
 
 
 /**
@@ -48,8 +50,8 @@ class Phone
     private $description;
 
     /**
-     * 
-     * @ORM\Column(type="string")
+     * @SWG\Property(type="string", maxLength=255)
+     * @ORM\Column(type="array")
      * @Groups({"list"})
      */
     private $links = [];

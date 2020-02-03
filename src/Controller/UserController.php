@@ -38,6 +38,21 @@ class UserController extends AbstractController
      *     description="The JSON sent contains invalid data",
      * )
      * 
+     * @SWG\Parameter(
+     *     name="user",
+     *     in="body",
+     *     description="The user you want add",
+     *     @SWG\Schema(
+     *         @SWG\Property(property="email", type="string", example="exemple@exemple.com"),
+     *         @SWG\Property(property="firstname", type="string", example="John"),
+     *         @SWG\Property(property="name", type="string", example="Smith"),
+     *         @SWG\Property(property="city", type="string", example="Paris"),
+     *         @SWG\Property(property="adress", type="string", example="3, rue de martinville")
+     *     )
+     * )
+     * 
+     * @SWG\Tag(name="users")
+     * 
      */
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserInterface $customer = null)
     {
@@ -77,6 +92,19 @@ class UserController extends AbstractController
      *     description="The list of all Users",
      *     @Model(type=User::class, groups={"list"})
      * )
+     * 
+     * @SWG\Response(
+     *     response=404,
+     *     description="Error : The page must be between X and X."
+     * )
+     * 
+     * @SWG\Parameter(
+     *     name="users",
+     *     in="query",
+     *     type="string",
+     *     description="List of users"
+     * )
+     * @SWG\Tag(name="users")
      */
     public function index(Request $request,UserRepository $repo, SerializerInterface $serializer)
     {
@@ -110,6 +138,15 @@ class UserController extends AbstractController
      *     description="This user does not exists."
      * )
      * 
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     type="integer",
+     *     description="Search for a username with a ID"
+     * )
+     * 
+     * @SWG\Tag(name="users")
+     * 
      */
 
     public function show(User $user, UserRepository $repo, SerializerInterface $serializer)
@@ -133,13 +170,18 @@ class UserController extends AbstractController
      * 
      * @SWG\Response(
      *     response=204,
-     *     description="Delete user",
+     *     description="User successfully deleted"
      * )
-     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Returned when ressource is not yours"
+     * )
      * @SWG\Response(
      *     response=404,
-     *     description="This user does not exists."
+     *     description="Returned when ressource is not found"
      * )
+     * 
+     * @SWG\Tag(name="users")
      */
     public function delete(User $user, EntityManagerInterface $entityManager)
     {

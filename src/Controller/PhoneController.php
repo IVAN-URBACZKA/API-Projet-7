@@ -3,17 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Phone;
+use Swagger\Annotations as SWG;
+use Swagger\Annotations\Schema;
 use App\Repository\PhoneRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Swagger\Annotations as SWG;
-use Nelmio\ApiDocBundle\Annotation\Model;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 
@@ -25,11 +26,31 @@ class PhoneController extends AbstractController
      * 
      * @Route("/api/phones/{page<\d+>?1}", name="list_phone", methods={"GET"})
      * @IsGranted("ROLE_USER")
-     * @SWG\Response(
-     *     response=200,
-     *     description="The list of all the Phones proposed by BileMo",
-     *     @Model(type=Phone::class, groups={"list"})
+     * 
+     *  @SWG\Response(
+     *     response=201,
+     *     description="Returns list of phones details",
+     *   @Model(type=Phone::class, groups={"list"}),
+     *  @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Phone::class))
+     *     )
+     *     
      * )
+     * 
+     * @SWG\Response(
+     *     response=404,
+     *     description="Error : The page must be between X and X."
+     * )
+     * 
+     *  @SWG\Parameter(
+     *     name="phones",
+     *     in="query",
+     *     type="string",
+     *     description="Search list of phones"
+     * )
+     * @SWG\Tag(name="phones")
+     * 
      */
     public function index(Request $request,PhoneRepository $repo, SerializerInterface $serializer)
     {
@@ -51,16 +72,27 @@ class PhoneController extends AbstractController
      /**
      * @Route("/api/phone/{id}", name="show_phone", methods={"GET"})
      * @IsGranted("ROLE_USER")
+     * 
+     *   
      * @SWG\Response(
      *     response=200,
-     *     description="Detail of a particular phone proposed by BileMo",
-     *     @Model(type=Phone::class, groups={"show"})
+     *     description="Returns phonr details",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Phone::class))
+     *     )
      * )
-     * 
      * @SWG\Response(
      *     response=404,
-     *     description="This product does not exists."
+     *     description="Returned when ressource is not found"
      * )
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     type="integer",
+     *     description="id number of the product"
+     * )
+     * @SWG\Tag(name="phones")
      * 
      */
     public function show(Phone $phone, PhoneRepository $repo, SerializerInterface $serializer)
