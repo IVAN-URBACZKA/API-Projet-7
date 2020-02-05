@@ -77,11 +77,22 @@ class UserController extends AbstractController
         )));
         $entityManager->flush();
 
-        $data = [
-            'status' => 201,
-            'message' => 'User bien ajoute'
+        $objUser = [
+            'id' => $user->getId(),
+            'name' => $user->getName(),
+            'firstname' => $user->getFirstname(),
+            'adress' => $user->getAdress(),
+            'city' => $user->getCity(),
+            'email' => $user->getEmail()
         ];
-        return new JsonResponse($data, 201);
+        
+
+        $data = $serializer->serialize($objUser,'json');
+
+        return new Response($data, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+
     }
 
      /**
@@ -93,7 +104,7 @@ class UserController extends AbstractController
      *     @Model(type=User::class, groups={"list"})
      * )
      * 
-     * @SWG\Response(
+     *      * @SWG\Response(
      *     response=404,
      *     description="Error : The page must be between X and X."
      * )
