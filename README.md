@@ -1,87 +1,16 @@
-# api-p7
-Api BileMo for my Project 7 Openclassrooms
+# Compétences cibles
 
-## Setup
-### Download Composer dependencies
+- **Exposer une API REST avec Symfony :** Je suis compétent pour mettre en place une API REST complète en utilisant le framework Symfony, permettant ainsi la communication avec d'autres applications de manière efficace et structurée.
 
-### Make sure you have Composer installed and then run:
+- **Lancer une authentification à chaque requête HTTP :** J'ai l'expertise nécessaire pour implémenter un système d'authentification sécurisé qui vérifie chaque requête HTTP, garantissant ainsi l'accès restreint aux ressources.
 
-## composer install
-### Configure the the .env File
+- **Produire une documentation technique :** Je peux créer une documentation technique détaillée pour expliquer les fonctionnalités, les endpoints de l'API, les flux de données et les schémas de base de données, facilitant ainsi la compréhension et l'utilisation de l'application.
 
-First, you should have an .env file. If you don't, copy .env.dist to create it.
+- **Analyser et optimiser les performances d’une application :** Je suis en mesure d'analyser les performances d'une application, d'identifier les goulots d'étranglement et de mettre en place des optimisations pour améliorer la réactivité et la vitesse d'exécution.
 
-Next, look at the configuration and make any adjustments you need - specifically DATABASE_URL.
+- **Concevoir une architecture efficace et adaptée :** Je peux concevoir une architecture solide et évolutive pour les applications, en utilisant les meilleures pratiques de conception et en choisissant les composants appropriés pour répondre aux besoins spécifiques.
 
-### Setup the Database
+- **Suivre la qualité d’un projet :** J'ai la capacité de surveiller la qualité d'un projet tout au long de son cycle de vie, en mettant en place des processus de revue de code, des tests automatisés et des normes de développement pour garantir la fiabilité et la stabilité.
 
-Again, make sure .env is setup for your computer. Then, create the database & tables!
+Mon ensemble de compétences me permet d'assurer la mise en place d'API REST sécurisées, de produire une documentation claire, d'optimiser les performances, de concevoir des architectures efficaces et de maintenir la qualité des projets que je développe.
 
-php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
-php bin/console doctrine:fixtures:load
-If you get an error that the database exists, that should be ok. But if you have problems, completely drop the database (doctrine:database:drop --force) and try again.
-
-### Start server
-
-php bin/console server:run
-
-Now check out the api at http://localhost:8000/api
-
-DOC
-
-click on the green button "Authorize" :
-
-Now, you can see 6 operations:
-
-GET /api/products
-
-GET /api/products/{id}
-
-GET /api/users
-
-GET /api/users/{id}
-
-POST /api/users
-
-DELETE /api/users/{id}
-
-You can also use Postman or Insomnia !
-
-Postman/Insomnia
-
-In both cases, start with a POST {yourdomain}/api/login_check with your credentials to get your token.
-
-Don't forget in the header : (KEY) Content-Type, (VALUE) application/json.
-
-In the body, select "raw" and JSON(application/json) and write your credentials.
-
-Then, Do your requests using the Bearer Authorization and paste your token.
-
-### HTTP
-Request
-
-### Request Line (HTTP Method, URI, protocol version).
-Headers.
-Body.
-Response
-
-Status Line (protocol version, code status, code status text).
-Headers.
-Body.
-Richardson Maturity Model
-### Level1: Resources
-
-example: /users or /users/{id}
-
-### Level2: Verbs
-
-example: GET /users/{id}
-
-### Level3: Hypermedia controls
-
-The point of hypermedia controls is that they tell us what we can do next.
-
-Any Questions ?
-
-Feel free to contact me !Setup
